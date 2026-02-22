@@ -17,7 +17,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Get initial theme from localStorage or system preference
-    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') as Theme | null : null
+    // Only runs on client side due to dynamic import with ssr: false
+    let savedTheme: Theme | null = null
+    try {
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        savedTheme = localStorage.getItem('theme') as Theme | null
+      }
+    } catch {
+      // localStorage not available
+    }
     
     if (savedTheme) {
       setTheme(savedTheme)
@@ -34,18 +42,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const applyTheme = (newTheme: Theme) => {
-    const html = document.documentElement
-    if (newTheme === 'dark') {
-      html.classList.add('dark')
-    } else {
-      html.classList.remove('dark')
+    if (typeof document !== 'undefined') {
+      const html = document.documentElement
+      const body = document.body
+      if (newTheme === 'dark') {
+        html.classList.add('dark')
+        body.classList.add('dark')
+      } else {
+        html.classList.remove('dark')
+        body.classList.remove('dark')
+      }
     }
   }
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       localStorage.setItem('theme', newTheme)
     }
     applyTheme(newTheme)

@@ -2,10 +2,16 @@
 
 import { useAuth } from '@/contexts/AuthContext'
 import { LogIn, Sparkles, Shield, Zap, Users } from 'lucide-react'
+import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
 
 export default function LoginForm() {
-  const { signInWithGoogle, loading } = useAuth()
+  const { signInWithGoogle, signInWithEmail, signUpWithEmail, loading } = useAuth()
+  const [isSignUp, setIsSignUp] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [emailLoading, setEmailLoading] = useState(false)
 
   const isSupabaseConfigured = 
     process.env.NEXT_PUBLIC_SUPABASE_URL && 
@@ -28,6 +34,26 @@ export default function LoginForm() {
       description: "Built for teams and individual productivity"
     }
   ]
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setEmailLoading(true)
+
+    try {
+      if (isSignUp) {
+        await signUpWithEmail(email, password)
+        setEmail('')
+        setPassword('')
+      } else {
+        await signInWithEmail(email, password)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Authentication failed')
+    } finally {
+      setEmailLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 p-4">
@@ -70,7 +96,75 @@ export default function LoginForm() {
               </div>
             </div>
           )}
-          
+
+          {/* Auth Mode Toggle */}
+          <div className="flex gap-2 mb-6">
+            <button
+              onClick={() => setIsSignUp(false)}
+              className={`flex-1 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                !isSignUp
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => setIsSignUp(true)}
+              className={`flex-1 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                isSignUp
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              Sign Up
+            </button>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700/50 rounded-lg p-3 mb-4">
+              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+            </div>
+          )}
+
+          {/* Email/Password Form */}
+          <form onSubmit={handleEmailAuth} className="space-y-4 mb-6">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+            <button
+              type="submit"
+              disabled={emailLoading || !isSupabaseConfigured}
+              className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200"
+            >
+              {emailLoading ? 'Loading...' : isSignUp ? 'Create Account' : 'Sign In'}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200 dark:border-slate-600" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium">Or continue with</span>
+            </div>
+          </div>
+
           {/* Google Sign In Button */}
           <button
             onClick={signInWithGoogle}

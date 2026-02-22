@@ -8,6 +8,8 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   signInWithGoogle: () => Promise<void>
+  signInWithEmail: (email: string, password: string) => Promise<void>
+  signUpWithEmail: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -56,6 +58,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (error) console.error('Error signing in with Google:', error)
   }
 
+  const signInWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+    if (error) console.error('Error signing in with email:', error)
+  }
+
+  const signUpWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password
+    })
+    if (error) console.error('Error signing up with email:', error)
+  }
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) console.error('Error signing out:', error)
@@ -65,6 +83,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     loading,
     signInWithGoogle,
+    signInWithEmail,
+    signUpWithEmail,
     signOut
   }
 
