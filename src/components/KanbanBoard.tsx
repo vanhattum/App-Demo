@@ -591,7 +591,7 @@ export default function KanbanBoard() {
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 dark:from-slate-100 to-slate-600 dark:to-slate-400 bg-clip-text text-transparent">
-                    Kanban Pro
+                    Demo Acme Inc
                   </h1>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Powered by Supabase</p>
                 </div>
