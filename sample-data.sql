@@ -8,8 +8,8 @@
 -- Create sample boards
 INSERT INTO boards (title, description, user_id) VALUES 
     ('My First Board', 'A sample Kanban board to get you started', auth.uid()),
-    ('Project Alpha', 'Development project board', auth.uid()),
-    ('Marketing Campaign', 'Q1 marketing initiatives', auth.uid())
+    ('Team Board', 'Development project board', auth.uid()),
+    ('Personal Stuff...', 'Q1 marketing initiatives', auth.uid())
 ON CONFLICT DO NOTHING;
 
 -- Create sample lists for the first board
