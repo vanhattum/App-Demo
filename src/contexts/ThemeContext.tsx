@@ -17,14 +17,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Get initial theme from localStorage or system preference
-    const savedTheme = localStorage.getItem('theme') as Theme | null
+    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') as Theme | null : null
     
     if (savedTheme) {
       setTheme(savedTheme)
       applyTheme(savedTheme)
     } else {
       // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      const prefersDark = typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
       const initialTheme = prefersDark ? 'dark' : 'light'
       setTheme(initialTheme)
       applyTheme(initialTheme)
@@ -45,7 +45,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme)
+    }
     applyTheme(newTheme)
   }
 
