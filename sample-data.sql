@@ -9,7 +9,7 @@
 INSERT INTO boards (title, description, user_id) VALUES 
     ('My First Board', 'A sample Kanban board to get you started', auth.uid()),
     ('Team Board', 'Development project board', auth.uid()),
-    ('Third Board', 'For personal stuff', auth.uid())
+    ('Personal Stuff...', 'Q1 marketing initiatives', auth.uid())
 ON CONFLICT DO NOTHING;
 
 -- Create sample lists for the first board
@@ -41,27 +41,27 @@ INSERT INTO cards (title, description, list_id, position) VALUES
      (SELECT id FROM lists WHERE title = 'Done' AND board_id = (SELECT id FROM boards WHERE title = 'My First Board' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 1)
 ON CONFLICT DO NOTHING;
 
--- Optional: Create lists for Project Alpha board
+-- Optional: Create lists for Team Project board
 INSERT INTO lists (title, board_id, position) VALUES 
-    ('Backlog', (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1), 1),
-    ('Sprint', (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1), 2),
-    ('Testing', (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1), 3),
-    ('Deployed', (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1), 4)
+    ('Backlog', (SELECT id FROM boards WHERE title = 'Team Project' AND user_id = auth.uid() LIMIT 1), 1),
+    ('Sprint', (SELECT id FROM boards WHERE title = 'Team Project' AND user_id = auth.uid() LIMIT 1), 2),
+    ('Testing', (SELECT id FROM boards WHERE title = 'Team Project' AND user_id = auth.uid() LIMIT 1), 3),
+    ('Deployed', (SELECT id FROM boards WHERE title = 'Team Project' AND user_id = auth.uid() LIMIT 1), 4)
 ON CONFLICT DO NOTHING;
 
--- Optional: Add some cards to Project Alpha
+-- Optional: Add some cards to Team Project
 INSERT INTO cards (title, description, list_id, position) VALUES 
     ('Setup project repository', 'Initialize Git repo and basic project structure', 
-     (SELECT id FROM lists WHERE title = 'Backlog' AND board_id = (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 1),
+     (SELECT id FROM lists WHERE title = 'Backlog' AND board_id = (SELECT id FROM boards WHERE title = '' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 1),
      
     ('Design database schema', 'Plan the database tables and relationships', 
-     (SELECT id FROM lists WHERE title = 'Backlog' AND board_id = (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 2),
+     (SELECT id FROM lists WHERE title = 'Backlog' AND board_id = (SELECT id FROM boards WHERE title = 'Team Project' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 2),
      
     ('Build authentication', 'Implement user login and registration', 
-     (SELECT id FROM lists WHERE title = 'Sprint' AND board_id = (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 1),
+     (SELECT id FROM lists WHERE title = 'Sprint' AND board_id = (SELECT id FROM boards WHERE title = 'Team Project' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 1),
      
     ('User dashboard', 'Create the main user interface', 
-     (SELECT id FROM lists WHERE title = 'Testing' AND board_id = (SELECT id FROM boards WHERE title = 'Project Alpha' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 1)
+     (SELECT id FROM lists WHERE title = 'Testing' AND board_id = (SELECT id FROM boards WHERE title = 'Team Project' AND user_id = auth.uid() LIMIT 1) LIMIT 1), 1)
 ON CONFLICT DO NOTHING;
 
 -- Success message

@@ -6,6 +6,7 @@ import { Plus, MoreHorizontal, Edit2, Trash2, LogOut, User, Sparkles, Calendar, 
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 import { Database } from '@/lib/supabase'
+import ThemeToggle from './ThemeToggle'
 
 // 🎯 TypeScript Integration (Feature #4: Auto-generated APIs)
 type Board = Database['public']['Tables']['boards']['Row']
@@ -578,9 +579,9 @@ export default function KanbanBoard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
       {/* Enhanced Header with Glass Effect */}
-      <header className="glass border-b border-white/20 sticky top-0 z-40">
+      <header className="glass border-b border-white/20 dark:border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-8">
@@ -589,10 +590,10 @@ export default function KanbanBoard() {
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                    Kanban Pro
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 dark:from-slate-100 to-slate-600 dark:to-slate-400 bg-clip-text text-transparent">
+                    Demo Acme Inc
                   </h1>
-                  <p className="text-xs text-slate-500 font-medium">Powered by Supabase</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Powered by Supabase</p>
                 </div>
               </div>
               
@@ -601,8 +602,8 @@ export default function KanbanBoard() {
                   <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <div>
-                      <h2 className="text-lg font-semibold text-slate-800">{currentBoard.title}</h2>
-                      <p className="text-sm text-slate-600">{currentBoard.description}</p>
+                      <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{currentBoard.title}</h2>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{currentBoard.description}</p>
                     </div>
                   </div>
                 </div>
@@ -610,19 +611,21 @@ export default function KanbanBoard() {
             </div>
             
             <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-3 px-4 py-2 bg-white/60 rounded-full border border-white/20">
+              <ThemeToggle />
+              
+              <div className="flex items-center space-x-3 px-4 py-2 bg-white/60 dark:bg-slate-700/60 rounded-full border border-white/20 dark:border-white/10">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
                 </div>
                 <div className="hidden sm:block">
-                  <p className="text-sm font-medium text-slate-700">{user?.email}</p>
-                  <p className="text-xs text-slate-500">Online</p>
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{user?.email}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Online</p>
                 </div>
               </div>
               
               <button
                 onClick={signOut}
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-white/60 rounded-full transition-all duration-200 border border-transparent hover:border-white/20"
+                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-white/60 dark:hover:bg-slate-700/60 rounded-full transition-all duration-200 border border-transparent hover:border-white/20 dark:hover:border-white/10"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Sign Out</span>
